@@ -1,0 +1,64 @@
+/*model evaluation and comparison*/
+
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
+data = load_iris()
+X = data.data
+y = data.target
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+logistic_model = LogisticRegression(max_iter=200)
+random_forest_model = RandomForestClassifier()
+
+logistic_model.fit(X_train, y_train)
+random_forest_model.fit(X_train, y_train)
+
+logistic_predictions = logistic_model.predict(X_test)
+random_forest_predictions = random_forest_model.predict(X_test)
+
+def evaluate_model(y_true, y_pred, model_name):
+    print(f"Evaluation for {model_name}:")
+    print(f"Accuracy: {accuracy_score(y_true, y_pred):.4f}")
+    print(f"Precision: {precision_score(y_true, y_pred, average='macro'):.4f}")
+    print(f"Recall: {recall_score(y_true, y_pred, average='macro'):.4f}")
+    print(f"F1 Score: {f1_score(y_true, y_pred, average='macro'):.4f}")
+    print("-" * 40)
+
+evaluate_model(y_test, logistic_predictions, "Logistic Regression")
+
+evaluate_model(y_test, random_forest_predictions, "Random Forest")
+
+print("Comparison of models:")
+logistic_acc = accuracy_score(y_test, logistic_predictions)
+rf_acc = accuracy_score(y_test, random_forest_predictions)
+print(f"Logistic Regression Accuracy: {logistic_acc:.4f}")
+print(f"Random Forest Accuracy: {rf_acc:.4f}")
+
+if logistic_acc > rf_acc:
+    print("Logistic Regression performed better based on Accuracy.")
+else:
+    print("Random Forest performed better based on Accuracy.")
+
+<h3>Output</h3>
+
+Evaluation for Logistic Regression:
+Accuracy: 0.9667
+Precision: 0.9697
+Recall: 0.9667
+F1 Score: 0.9667
+----------------------------------------
+Evaluation for Random Forest:
+Accuracy: 1.0000
+Precision: 1.0000
+Recall: 1.0000
+F1 Score: 1.0000
+----------------------------------------
+Comparison of models:
+Logistic Regression Accuracy: 0.9667
+Random Forest Accuracy: 1.0000
+Random Forest performed better based on Accuracy.
